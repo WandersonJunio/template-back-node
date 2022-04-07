@@ -14,14 +14,18 @@ app.use(handleError);
 
 let sockets = [];
 wsApp.on('connection', function (socket) {
-  // Adicionamos cada nova conexão/socket ao array `sockets`
+  console.log('Socket connected');
   sockets.push(socket);
-  // Quando você receber uma mensagem, enviamos ela para todos os sockets
+
   socket.on('message', function (msg) {
-    sockets.forEach(s => s.send(msg));
+    console.log(JSON.stringify(msg.toString()));
+    sockets.forEach(s => {
+      s.send(JSON.stringify(msg.toString()));
+    });
   });
-  // Quando a conexão de um socket é fechada/disconectada, removemos o socket do array
+
   socket.on('close', function () {
+    console.log('Connection closed');
     sockets = sockets.filter(s => s !== socket);
   });
 });
